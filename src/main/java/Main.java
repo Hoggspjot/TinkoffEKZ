@@ -1,32 +1,45 @@
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Scanner;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        try (Scanner scanner = new Scanner(System.in)) {
-            int arraySize = scanner.nextInt();
-
-            int[] array = new int[arraySize];
-
-            for (int i = 0; i < arraySize; i++) {
-                array[i] = scanner.nextInt();
-            }
-
-            Map<Integer, Long> counter = Arrays.stream(array)
-                    .boxed()
-                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-            long MOD = 1000000007L;
-            long result = 1;
-            for (long f : counter.values()) {
-                result = (result * (1L + f)) % MOD;
-            }
-            long modResult = (result - 1 + MOD) % MOD;
-            System.out.println(modResult);
-
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt();
+        long[] l = new long[n + 1];
+        long[] r = new long[n + 1];
+        long[] a = new long[n + 1];
+        for (int i = 1; i <= n; i++) {
+            l[i] = scanner.nextLong();
+            r[i] = scanner.nextLong();
+            a[i] = scanner.nextLong();
         }
+
+        long maxWater = 0;
+        for (int start = 1; start <= n; start++) {
+            long water = a[start];
+            long leftFlow = l[start];
+            long rightFlow = r[start];
+
+
+            for (int i = start - 1; i >= 1; i--) {
+                long canFlow = Math.min(leftFlow, a[i]);
+                water += canFlow;
+                leftFlow = Math.min(leftFlow - canFlow, l[i]);
+                if (leftFlow == 0)
+                    break;
+            }
+
+
+            for (int i = start + 1; i <= n; i++) {
+                long canFlow = Math.min(rightFlow, a[i]);
+                water += canFlow;
+                rightFlow = Math.min(rightFlow - canFlow, r[i]);
+                if (rightFlow == 0)
+                    break;
+            }
+
+            maxWater = Math.max(maxWater, water);
+        }
+
+        System.out.println(maxWater);
     }
 }
