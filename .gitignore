@@ -38,3 +38,4 @@ build/
 .idea/
 test/
 /target/
+/src/main/java/text.txt
