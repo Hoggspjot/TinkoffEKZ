@@ -1,42 +1,32 @@
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
-            int size = scanner.nextInt();
+            int arraySize = scanner.nextInt();
 
-            for (int i = 0; i < size; i++) {
-                int x = scanner.nextInt();
-                int[] array = new int[x];
-                for (int j = 0; j < array.length; j++) {
-                    array[j] = scanner.nextInt();
-                }
-                Arrays.sort(array);
+            int[] array = new int[arraySize];
 
-                boolean check = true;
-                for (int j = 0; j < x; j++) {
-                    if (array[j] > (j + 1)) {
-                        check = false;
-                        break;
-                    }
-                }
-                if (!check) {
-                    System.out.println("Second");
-                    continue;
-                }
-
-                long moves = 0;
-                for (int j = 0; j < x; j++) {
-                    moves += ((j + 1) - array[j]);
-                }
-
-                if (moves % 2 == 1) {
-                    System.out.println("First");
-                } else {
-                    System.out.println("Second");
-                }
+            for (int i = 0; i < arraySize; i++) {
+                array[i] = scanner.nextInt();
             }
+
+            Map<Integer, Long> counter = Arrays.stream(array)
+                    .boxed()
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+            long MOD = 1000000007L;
+            long result = 1;
+            for (long f : counter.values()) {
+                result = (result * (1L + f)) % MOD;
+            }
+            long modResult = (result - 1 + MOD) % MOD;
+            System.out.println(modResult);
+
         }
     }
 }
